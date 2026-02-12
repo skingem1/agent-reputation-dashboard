@@ -27,8 +27,8 @@ export interface KnownAgent {
   description: string;
   /** Which protocol this agent belongs to */
   protocol: string;
-  /** Primary wallet address (full, not truncated) */
-  walletAddress: string;
+  /** Primary wallet address (full, not truncated). Undefined for walletless agents. */
+  walletAddress?: string;
   /** Which chains the agent operates on */
   chains: ChainId[];
   /** Skills/capabilities */

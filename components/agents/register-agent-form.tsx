@@ -15,8 +15,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { Loader2, Rocket, AlertCircle } from "lucide-react";
+import { Loader2, Rocket, AlertCircle, Wallet } from "lucide-react";
 import type { ChainId, AgentSkill } from "@/lib/data/types";
 
 const ALL_SKILLS: AgentSkill[] = [
@@ -36,6 +37,7 @@ export function RegisterAgentForm({ protocols }: RegisterAgentFormProps) {
   // Form state
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [hasWallet, setHasWallet] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
   const [chains, setChains] = useState<ChainId[]>([]);
   const [skills, setSkills] = useState<AgentSkill[]>([]);
@@ -70,7 +72,7 @@ export function RegisterAgentForm({ protocols }: RegisterAgentFormProps) {
   const canSubmit =
     name.length >= 2 &&
     description.length >= 10 &&
-    isValidWallet &&
+    (!hasWallet || isValidWallet) &&
     chains.length >= 1 &&
     skills.length >= 1;
 
@@ -83,7 +85,7 @@ export function RegisterAgentForm({ protocols }: RegisterAgentFormProps) {
       const result = await registerAgent({
         name: name.trim(),
         description: description.trim(),
-        walletAddress,
+        walletAddress: hasWallet ? walletAddress : undefined,
         chains,
         skills,
         protocol,
@@ -139,32 +141,62 @@ export function RegisterAgentForm({ protocols }: RegisterAgentFormProps) {
             </p>
           </div>
 
-          {/* Wallet Address */}
-          <div className="space-y-2">
-            <Label htmlFor="wallet">
-              Wallet Address <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="wallet"
-              placeholder="0x..."
-              value={walletAddress}
-              onChange={(e) => setWalletAddress(e.target.value)}
-              className={cn(
-                "font-mono text-sm",
-                walletAddress &&
-                  !isValidWallet &&
-                  "border-red-500 focus-visible:ring-red-500"
-              )}
-              disabled={isPending}
-            />
-            {walletAddress && !isValidWallet && (
-              <p className="text-xs text-red-500">
-                Must be a valid EVM address (0x + 40 hex characters)
-              </p>
+          {/* Wallet Address (Optional) */}
+          <div className="space-y-3">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="has-wallet"
+                checked={hasWallet}
+                onCheckedChange={(checked) => {
+                  setHasWallet(checked === true);
+                  if (!checked) setWalletAddress("");
+                }}
+                disabled={isPending}
+              />
+              <Label
+                htmlFor="has-wallet"
+                className="cursor-pointer text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                My agent has an on-chain wallet
+              </Label>
+            </div>
+            {!hasWallet && (
+              <div className="flex items-start gap-2 rounded-lg border border-blue-500/20 bg-blue-500/5 p-3 text-xs text-blue-600 dark:text-blue-400">
+                <Wallet className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                <span>
+                  Agents without a wallet will be scored based on protocol affiliation, skills, and simulated performance metrics.
+                  On-chain bonuses (transaction activity, balance) won&apos;t apply.
+                </span>
+              </div>
             )}
-            <p className="text-xs text-muted-foreground">
-              This address will be used to fetch on-chain data for reputation scoring.
-            </p>
+            {hasWallet && (
+              <div className="space-y-2">
+                <Label htmlFor="wallet">
+                  Wallet Address <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="wallet"
+                  placeholder="0x..."
+                  value={walletAddress}
+                  onChange={(e) => setWalletAddress(e.target.value)}
+                  className={cn(
+                    "font-mono text-sm",
+                    walletAddress &&
+                      !isValidWallet &&
+                      "border-red-500 focus-visible:ring-red-500"
+                  )}
+                  disabled={isPending}
+                />
+                {walletAddress && !isValidWallet && (
+                  <p className="text-xs text-red-500">
+                    Must be a valid EVM address (0x + 40 hex characters)
+                  </p>
+                )}
+                <p className="text-xs text-muted-foreground">
+                  This address will be used to fetch on-chain data for reputation scoring.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Chains */}

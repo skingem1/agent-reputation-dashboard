@@ -35,6 +35,7 @@ export function SignInDialog({ open, onOpenChange }: SignInDialogProps) {
       provider,
       options: {
         redirectTo: `${window.location.origin}/auth/callback?next=/agents/register`,
+        ...(provider === "github" && { scopes: "read:user user:email" }),
       },
     });
     if (error) {

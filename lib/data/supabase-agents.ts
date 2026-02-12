@@ -35,7 +35,7 @@ export async function getSubmittedAgents(): Promise<KnownAgent[]> {
     name: row.name as string,
     description: row.description as string,
     protocol: row.protocol as string,
-    walletAddress: row.wallet_address as string,
+    walletAddress: (row.wallet_address as string) || undefined,
     chains: row.chains as ChainId[],
     skills: row.skills as AgentSkill[],
     website: (row.website as string) ?? undefined,

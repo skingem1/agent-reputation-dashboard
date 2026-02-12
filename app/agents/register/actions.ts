@@ -9,7 +9,7 @@ import type { ChainId, AgentSkill } from "@/lib/data/types";
 interface RegisterAgentInput {
   name: string;
   description: string;
-  walletAddress: string;
+  walletAddress?: string;
   chains: ChainId[];
   skills: AgentSkill[];
   protocol: string;
@@ -50,7 +50,7 @@ export async function registerAgent(
       error: "Description must be between 10 and 500 characters.",
     };
   }
-  if (!/^0x[a-fA-F0-9]{40}$/.test(input.walletAddress)) {
+  if (input.walletAddress && !/^0x[a-fA-F0-9]{40}$/.test(input.walletAddress)) {
     return { error: "Invalid EVM wallet address (must be 0x + 40 hex chars)." };
   }
   if (!input.chains || input.chains.length === 0) {
@@ -65,10 +65,11 @@ export async function registerAgent(
     return { error: "Agent name must contain at least one alphanumeric character." };
   }
 
-  // Check against hardcoded agents (wallet address)
+  // Check against hardcoded agents (wallet address + slug)
   const existingHardcoded = KNOWN_AGENTS.find(
     (a) =>
-      a.walletAddress.toLowerCase() === input.walletAddress.toLowerCase() ||
+      (input.walletAddress && a.walletAddress &&
+        a.walletAddress.toLowerCase() === input.walletAddress.toLowerCase()) ||
       a.id === slug
   );
   if (existingHardcoded) {
@@ -77,13 +78,15 @@ export async function registerAgent(
     };
   }
 
-  // Check against Supabase for duplicates (slug or wallet)
+  // Check against Supabase for duplicates (slug, and wallet if provided)
+  const orConditions = input.walletAddress
+    ? `slug.eq.${slug},wallet_address.ilike.${input.walletAddress}`
+    : `slug.eq.${slug}`;
+
   const { data: existing } = await supabase
     .from("submitted_agents")
     .select("id, slug, wallet_address")
-    .or(
-      `slug.eq.${slug},wallet_address.ilike.${input.walletAddress}`
-    )
+    .or(orConditions)
     .limit(1);
 
   if (existing && existing.length > 0) {
@@ -98,7 +101,7 @@ export async function registerAgent(
     slug,
     name: input.name.trim(),
     description: input.description.trim(),
-    wallet_address: input.walletAddress,
+    wallet_address: input.walletAddress || null,
     chains: input.chains,
     skills: input.skills,
     protocol: input.protocol || "independent",

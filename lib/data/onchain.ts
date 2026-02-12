@@ -136,7 +136,7 @@ function generatePerformanceMetrics(
     safetyScore:          metric(2006, 40, 99),
     transparencyScore:    metric(2007, 30, 95),
     userFeedback:         metric(2008, 25, 96),
-    verifiableExecScore:  agent.source === "user-submitted" ? 0 : metric(2009, 10, 90),
+    verifiableExecScore:  (agent.source === "user-submitted" || !agent.walletAddress) ? 0 : metric(2009, 10, 90),
   };
 }
 
@@ -417,12 +417,20 @@ function clamp(val: number, min: number, max: number): number {
 // ======================================================================
 
 async function buildAgent(known: KnownAgent): Promise<Agent> {
-  // Fetch on-chain data in parallel
-  const [txCounts, balances, transactions] = await Promise.all([
-    fetchTxCounts(known.walletAddress, known.chains),
-    fetchBalances(known.walletAddress, known.chains),
-    fetchRecentTransfers(known.walletAddress, known.chains),
-  ]);
+  const hasWalletAddress = !!known.walletAddress;
+
+  // Fetch on-chain data in parallel (skip for walletless agents)
+  const [txCounts, balances, transactions] = hasWalletAddress
+    ? await Promise.all([
+        fetchTxCounts(known.walletAddress!, known.chains),
+        fetchBalances(known.walletAddress!, known.chains),
+        fetchRecentTransfers(known.walletAddress!, known.chains),
+      ])
+    : [
+        {} as Record<ChainId, number>,
+        [] as { chain: ChainId; balance: bigint }[],
+        [] as Transaction[],
+      ];
 
   const totalTx = Object.values(txCounts).reduce((sum, c) => sum + c, 0);
   const totalBalance = balances.reduce((sum, b) => sum + b.balance, BigInt(0));
@@ -450,15 +458,21 @@ async function buildAgent(known: KnownAgent): Promise<Agent> {
       (tx) => Date.now() - new Date(tx.timestamp).getTime() < 7 * 86400000
     );
     status = hasRecentTx ? "active" : "inactive";
+  } else if (!hasWalletAddress && known.source === "user-submitted") {
+    // Walletless user-submitted agents: start as under-review, can become active via protocol tier
+    const protocolScore = PROTOCOL_SCORES[known.protocol] || DEFAULT_PROTOCOL_SCORE;
+    if (protocolScore >= 25) {
+      status = seeded(h + 100) > 0.4 ? "active" : "under-review";
+    } else {
+      status = "under-review";
+    }
   } else {
-    // Without on-chain data, estimate from age and protocol (rescaled thresholds)
+    // Has wallet but no on-chain data, or hardcoded agents — estimate from age and protocol
     const ageMonths = (Date.now() - new Date(known.createdAt).getTime()) / (86400000 * 30);
     const protocolScore = PROTOCOL_SCORES[known.protocol] || DEFAULT_PROTOCOL_SCORE;
     if (protocolScore >= 26 && ageMonths > 3) {
-      // Morpheus+ tier protocols with some age → active
       status = "active";
     } else if (protocolScore >= 23) {
-      // AI Arena+ tier → probabilistic
       status = seeded(h + 100) > 0.3 ? "active" : "inactive";
     } else {
       status = "under-review";
@@ -517,7 +531,7 @@ async function buildAgent(known: KnownAgent): Promise<Agent> {
     reviews,
     createdAt: known.createdAt,
     lastActiveAt: lastActive,
-    walletAddress: truncateAddress(known.walletAddress),
+    walletAddress: known.walletAddress ? truncateAddress(known.walletAddress) : "No wallet",
     website: known.website,
     twitter: known.twitter,
     source: known.source || "hardcoded",

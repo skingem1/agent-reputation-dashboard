@@ -24,6 +24,7 @@ export function RegisterSignInGate() {
       provider,
       options: {
         redirectTo: `${window.location.origin}/auth/callback?next=/agents/register`,
+        ...(provider === "github" && { scopes: "read:user user:email" }),
       },
     });
     if (error) {
