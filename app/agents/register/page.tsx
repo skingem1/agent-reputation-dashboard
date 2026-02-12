@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
 import { RegisterAgentForm } from "@/components/agents/register-agent-form";
+import { RegisterSignInGate } from "@/components/auth/register-sign-in-gate";
 import { PROTOCOLS } from "@/lib/data/protocols";
 import { Bot } from "lucide-react";
 
@@ -17,7 +17,7 @@ export default async function RegisterAgentPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/");
+    return <RegisterSignInGate />;
   }
 
   const protocols = PROTOCOLS.map((p) => ({ id: p.id, name: p.name }));
