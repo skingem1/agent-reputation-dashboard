@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Zap } from "lucide-react";
+import Image from "next/image";
 
 export function Footer() {
   return (
@@ -7,9 +7,12 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-gradient-to-br from-cyan-500 to-violet-600">
-              <Zap className="h-3 w-3 text-white" />
-            </div>
+            <Image
+              src="/logo.svg"
+              alt="AgentRep Logo"
+              width={24}
+              height={24}
+            />
             <span className="text-sm font-display">AgentRep</span>
             <span className="text-xs text-muted-foreground">
               Multi-Chain AI Agent Reputation

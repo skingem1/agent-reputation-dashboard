@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, LogIn, Zap } from "lucide-react";
+import { Menu, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
@@ -29,9 +30,13 @@ export function Header() {
       <header className="sticky top-0 z-50 w-full border-b border-cyan-500/10 bg-background/60 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500 to-violet-600 glow-cyan">
-              <Zap className="h-4 w-4 text-white" />
-            </div>
+            <Image
+              src="/logo.svg"
+              alt="AgentRep Logo"
+              width={36}
+              height={36}
+              className="glow-cyan"
+            />
             <span className="text-xl font-display">
               Agent<span className="bg-gradient-to-r from-cyan-400 to-violet-500 bg-clip-text text-transparent">Rep</span>
             </span>
