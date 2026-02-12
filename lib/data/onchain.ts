@@ -50,18 +50,95 @@ function seeded(seed: number): number {
   return x - Math.floor(x);
 }
 
-// --- Protocol maturity scores (based on age, ecosystem size, security audits) ---
+// --- Protocol maturity scores (rescaled 19-31 for headroom) ---
+// Rescaled from original 65-88 to leave room for performance metrics to differentiate agents.
+// Protocol base provides a foundation; real metrics drive the final score.
 const PROTOCOL_SCORES: Record<string, number> = {
-  autonolas: 88,     // Oldest, 9 chains, 3.5M+ txs, audited
-  virtuals: 79,      // Large ecosystem (2200+ agents), $500M+ market cap
-  morpheus: 75,      // 320K+ ETH staked, audited by OpenZeppelin
-  "erc-8004": 82,    // Ethereum standard, backed by MetaMask/EF/Coinbase/Google
-  openclaw: 72,      // Massive adoption (1.5M agents), but security concerns
-  spectral: 70,      // Innovative (NL→Solidity), but smaller ecosystem
-  wayfinder: 68,     // Newer, but backed by Parallel Studios
-  "fetch-ai": 83,    // Established (2017), 24M+ txs, ASI Alliance
-  "ai-arena": 65,    // Niche (gaming), single chain
+  autonolas: 31,     // Oldest, 9 chains, 3.5M+ txs, audited
+  "fetch-ai": 29,    // Established (2017), 24M+ txs, ASI Alliance
+  "erc-8004": 29,    // Ethereum standard, backed by MetaMask/EF/Coinbase/Google
+  virtuals: 28,      // Large ecosystem (2200+ agents), $500M+ market cap, hack concerns
+  morpheus: 26,      // 320K+ ETH staked, audited by OpenZeppelin
+  openclaw: 25,      // Massive adoption (1.5M agents), security issues
+  spectral: 25,      // Innovative (NL→Solidity), but smaller ecosystem
+  wayfinder: 24,     // Newer, but backed by Parallel Studios
+  "ai-arena": 23,    // Niche (gaming), single chain
 };
+const DEFAULT_PROTOCOL_SCORE = 21; // Fallback for unknown protocols
+const USER_SUBMITTED_SCORE = 19;   // Unverified, must prove via on-chain
+
+// --- Performance metrics interface (simulated until real oracles/APIs available) ---
+interface PerformanceMetrics {
+  /** Task completion success rate (0-100) */
+  taskSuccessRate: number;
+  /** System robustness / error recovery (0-100) */
+  robustnessScore: number;
+  /** Task delivery / completion rate (0-100) */
+  deliveryRate: number;
+  /** Response latency, normalized (0-1, lower = faster) */
+  normalizedLatency: number;
+  /** Computational efficiency (0-100) */
+  efficiencyScore: number;
+  /** Safety / no harmful actions (0-100) */
+  safetyScore: number;
+  /** Code/action transparency (0-100) */
+  transparencyScore: number;
+  /** User feedback / ratings (0-100) */
+  userFeedback: number;
+  /** Verifiable execution proof score (0-100), optional */
+  verifiableExecScore: number;
+}
+
+/**
+ * Generate simulated performance metrics for an agent.
+ * Uses protocol maturity, on-chain data, and deterministic randomness
+ * to produce realistic metrics. These will be replaced by real data
+ * from oracles/APIs when available.
+ */
+function generatePerformanceMetrics(
+  agent: KnownAgent,
+  totalTx: number,
+  balanceEth: number,
+  successRate: number,
+  h: number
+): PerformanceMetrics {
+  const protocolBase = agent.source === "user-submitted"
+    ? USER_SUBMITTED_SCORE
+    : (PROTOCOL_SCORES[agent.protocol] || DEFAULT_PROTOCOL_SCORE);
+
+  // Protocol quality factor (0-1) — higher protocol base = higher baseline metrics
+  const pqf = protocolBase / 31;
+
+  // On-chain activity factor (0-1) — more tx + balance = better metrics
+  const txFactor = Math.min(1, Math.log1p(totalTx) / 12);   // saturates ~160K tx
+  const balFactor = Math.min(1, Math.log1p(balanceEth) / 8); // saturates ~3000 ETH
+
+  // Age factor (0-1)
+  const ageMonths = (Date.now() - new Date(agent.createdAt).getTime()) / (86400000 * 30);
+  const ageFactor = Math.min(1, ageMonths / 24); // saturates at 2 years
+
+  // Composite quality signal (0-1)
+  const quality = pqf * 0.3 + txFactor * 0.25 + balFactor * 0.15 + ageFactor * 0.2 + (successRate / 100) * 0.1;
+
+  // Generate each metric: base from quality + per-metric deterministic variation
+  const metric = (seed: number, floor: number, ceiling: number): number => {
+    const variation = seeded(h + seed) * 20 - 10; // ±10
+    const raw = quality * (ceiling - floor) + floor + variation;
+    return Math.max(0, Math.min(100, Math.round(raw)));
+  };
+
+  return {
+    taskSuccessRate:      metric(2001, 30, 98),
+    robustnessScore:      metric(2002, 25, 95),
+    deliveryRate:         metric(2003, 35, 98),
+    normalizedLatency:    Math.max(0.05, Math.min(0.95, 1 - quality + (seeded(h + 2004) * 0.2 - 0.1))),
+    efficiencyScore:      metric(2005, 20, 95),
+    safetyScore:          metric(2006, 40, 99),
+    transparencyScore:    metric(2007, 30, 95),
+    userFeedback:         metric(2008, 25, 96),
+    verifiableExecScore:  agent.source === "user-submitted" ? 0 : metric(2009, 10, 90),
+  };
+}
 
 // --- Fetch real balance for an address across its chains ---
 async function fetchBalances(
@@ -200,102 +277,121 @@ function truncateHash(hash: string): string {
 }
 
 // ======================================================================
-// REPUTATION SCORING — Hybrid: Protocol Metadata + On-Chain Data
+// REPUTATION SCORING — Hybrid: Protocol Base + On-Chain + Performance Metrics
 // ======================================================================
+//
+// Algorithm v2: rescaled protocol bases (19-31) leave headroom for
+// normalized performance metrics (0-10 each) and on-chain bonuses to
+// drive meaningful differentiation across the 25-99 scoring range.
+//
+// Sub-scores:
+//   Reliability = protocol_base + age_bonus + multi_chain_bonus - 5 + rand(±3) + tx_activity + robustness_norm + delivery_norm
+//   Accuracy    = protocol_base + skill_bonus - 3 + rand(±3) + task_success_norm + verifiable_exec_norm
+//   Speed       = protocol_base - 5 + multi_chain_bonus + rand(±3) + latency_norm + efficiency_norm
+//   Trust       = protocol_base + age_bonus + rand(±3) + balance_bonus + safety_norm + transparency_norm + feedback_norm
+//
+// Overall = reliability×0.30 + accuracy×0.25 + speed×0.20 + trust×0.25
+//         + on_chain_bonus × weight + rand(±4)
 
 function computeReputation(
   txCounts: Record<ChainId, number>,
   balances: { chain: ChainId; balance: bigint }[],
   agent: KnownAgent,
-  txs: Transaction[]
+  txs: Transaction[],
+  metrics: PerformanceMetrics
 ): ReputationScore {
   const h = hashString(agent.id);
   const totalTx = Object.values(txCounts).reduce((sum, c) => sum + c, 0);
   const totalBalance = balances.reduce((sum, b) => sum + b.balance, BigInt(0));
   const balanceEth = Number(totalBalance) / 1e18;
-  const hasOnChainData = totalTx > 0 || balanceEth > 0;
+  const hasWallet = totalTx > 0 || balanceEth > 0;
 
-  // --- BASELINE from protocol metadata (always available) ---
+  // --- Step 1: Protocol base (rescaled 19-31) ---
   const isUserSubmitted = agent.source === "user-submitted";
-
-  // Protocol maturity (0-100): user-submitted agents start lower, relying more on on-chain data
   const protocolBase = isUserSubmitted
-    ? 55
-    : (PROTOCOL_SCORES[agent.protocol] || 60);
+    ? USER_SUBMITTED_SCORE
+    : (PROTOCOL_SCORES[agent.protocol] || DEFAULT_PROTOCOL_SCORE);
 
-  // Agent age bonus (0-20): older = more established
+  // --- Step 2: Structural bonuses ---
   const agentAgeMonths =
     (Date.now() - new Date(agent.createdAt).getTime()) / (86400000 * 30);
   const ageBonus = Math.min(20, Math.round(agentAgeMonths * 0.8));
+  const multiChainBonus = Math.min(15, agent.chains.length * 4);
+  const skillBonus = Math.min(10, Math.round(agent.skills.length * 2.5));
 
-  // Multi-chain bonus (0-15): operating across more chains = more versatile
-  const chainBonus = Math.min(15, agent.chains.length * 4);
-
-  // Skill breadth bonus (0-10): more skills = more capable
-  const skillBonus = Math.min(10, agent.skills.length * 2.5);
-
-  // Per-agent deterministic variation (-8 to +8) so agents within same protocol differ
-  const variation = Math.round(seeded(h) * 16 - 8);
-
-  // --- ON-CHAIN BONUS (only when RPC data is available) ---
-  let onChainBonus = 0;
-  if (hasOnChainData) {
-    // Tx activity bonus (0-15)
-    onChainBonus += Math.min(15, Math.round(Math.log1p(totalTx) * 2));
-    // Balance bonus (0-10)
-    onChainBonus += Math.min(10, Math.round(Math.log1p(balanceEth) * 3));
-    // Multi-chain activity bonus (0-5)
+  // --- Step 3: On-chain bonus (0-30) ---
+  let txActivity = 0;
+  let balanceBonus = 0;
+  let multiChainAct = 0;
+  if (hasWallet) {
+    txActivity = Math.min(15, Math.round(Math.log1p(totalTx) * 2));
+    balanceBonus = Math.min(10, Math.round(Math.log1p(balanceEth) * 3));
     const chainsActive = Object.values(txCounts).filter((c) => c > 0).length;
-    onChainBonus += Math.min(5, chainsActive * 2);
+    multiChainAct = Math.min(5, chainsActive * 2);
   }
+  const onChainBonus = txActivity + balanceBonus + multiChainAct;
 
-  // --- COMPOSITE SCORES ---
-  // Each sub-score uses protocol base + different weighting of bonuses + variation
+  // --- Normalize performance metrics to 0-10 ---
+  const taskSuccessNorm = metrics.taskSuccessRate / 10;
+  const robustnessNorm = metrics.robustnessScore / 10;
+  const deliveryNorm = metrics.deliveryRate / 10;
+  const latencyNorm = (1 - metrics.normalizedLatency) * 10;
+  const efficiencyNorm = metrics.efficiencyScore / 10;
+  const safetyNorm = metrics.safetyScore / 10;
+  const transparencyNorm = metrics.transparencyScore / 10;
+  const feedbackNorm = metrics.userFeedback / 10;
+  const verifiableExecNorm = metrics.verifiableExecScore / 10;
+
+  // --- Step 4: Sub-scores (each clamped to 25-99) ---
+  const rand1 = seeded(h + 1) * 6 - 3;  // ±3
+  const rand2 = seeded(h + 2) * 6 - 3;
+  const rand3 = seeded(h + 3) * 6 - 3;
+  const rand4 = seeded(h + 4) * 6 - 3;
 
   const reliability = clamp(
-    protocolBase + ageBonus - 5 + Math.round(seeded(h + 1) * 10 - 5) + (hasOnChainData ? Math.min(10, Math.round(Math.log1p(totalTx) * 3)) : 0),
+    protocolBase + ageBonus + multiChainBonus - 5 + rand1 + txActivity + robustnessNorm + deliveryNorm,
     25, 99
   );
 
   const accuracy = clamp(
-    protocolBase + skillBonus - 3 + Math.round(seeded(h + 2) * 10 - 5) +
-      (txs.length > 0 ? Math.round((txs.filter((t) => t.status === "success").length / txs.length) * 10 - 5) : 0),
+    protocolBase + skillBonus - 3 + rand2 + taskSuccessNorm + verifiableExecNorm,
     25, 99
   );
 
   const speed = clamp(
-    protocolBase - 10 + chainBonus + Math.round(seeded(h + 3) * 12 - 6) + (hasOnChainData ? 5 : 0),
-    20, 99
-  );
-
-  const trust = clamp(
-    protocolBase + ageBonus + Math.round(seeded(h + 4) * 8 - 4) + (hasOnChainData ? Math.min(8, Math.round(Math.log1p(balanceEth) * 2)) : 0),
+    protocolBase - 5 + multiChainBonus + rand3 + latencyNorm + efficiencyNorm,
     25, 99
   );
 
-  // Overall: weighted average of sub-scores + on-chain bonus
-  // User-submitted agents get heavier on-chain weighting (on-chain data matters more for unverified agents)
+  const trust = clamp(
+    protocolBase + ageBonus + rand4 + balanceBonus + safetyNorm + transparencyNorm + feedbackNorm,
+    25, 99
+  );
+
+  // --- Step 5: Overall score ---
   const onChainWeight = isUserSubmitted ? 0.5 : 0.3;
-  const rawOverall = Math.round(
-    reliability * 0.3 +
-    accuracy * 0.2 +
-    speed * 0.2 +
-    trust * 0.3
-  ) + Math.round(onChainBonus * onChainWeight) + variation;
+  const overallRand = seeded(h + 5) * 8 - 4; // ±4
+  const rawOverall =
+    reliability * 0.30 +
+    accuracy * 0.25 +
+    speed * 0.20 +
+    trust * 0.25 +
+    onChainBonus * onChainWeight +
+    overallRand;
 
   const overall = clamp(rawOverall, 20, 99);
 
-  // --- 30-DAY HISTORY ---
+  // --- Step 6: 30-day history ---
   const history: number[] = [];
-  let score = overall - 3;
+  let histScore = overall - 3;
+  const drift = seeded(h + 50) * 0.2 - 0.1; // ±0.1 per agent, random direction
   for (let i = 0; i < 30; i++) {
-    const dayVariation = seeded(h * 100 + i) * 4 - 2; // -2 to +2
-    const trendDrift = (i - 15) * 0.05 * (seeded(h + 50) > 0.5 ? 1 : -1);
-    score = clamp(score + dayVariation + trendDrift, 15, 99);
-    history.push(Math.round(score));
+    const dayVariation = seeded(h * 100 + i) * 4 - 2; // ±2
+    histScore = clamp(histScore + dayVariation + drift, 20, 99);
+    history.push(Math.round(histScore));
   }
 
-  // Trend
+  // Trend from last 14 days
   const recent7 = history.slice(-7).reduce((s, v) => s + v, 0) / 7;
   const older7 = history.slice(-14, -7).reduce((s, v) => s + v, 0) / 7;
   const trend: "up" | "down" | "stable" =
@@ -334,7 +430,18 @@ async function buildAgent(known: KnownAgent): Promise<Agent> {
   const hasOnChainData = totalTx > 0 || balanceEth > 0;
   const h = hashString(known.id);
 
-  const reputation = computeReputation(txCounts, balances, known, transactions);
+  // Compute success rate from real transactions or estimate
+  const successRate = transactions.length > 0
+    ? Math.round(
+        (transactions.filter((t) => t.status === "success").length / transactions.length) * 100
+      )
+    : clamp(Math.round(85 + seeded(h + 300) * 14), 85, 99);
+
+  // Generate performance metrics (simulated until real oracles available)
+  const metrics = generatePerformanceMetrics(known, totalTx, balanceEth, successRate, h);
+
+  // Compute reputation with new v2 algorithm
+  const reputation = computeReputation(txCounts, balances, known, transactions, metrics);
 
   // Status: use on-chain data if available, otherwise derive from protocol + age
   let status: "active" | "inactive" | "under-review";
@@ -344,12 +451,14 @@ async function buildAgent(known: KnownAgent): Promise<Agent> {
     );
     status = hasRecentTx ? "active" : "inactive";
   } else {
-    // Without on-chain data, estimate from age and protocol
+    // Without on-chain data, estimate from age and protocol (rescaled thresholds)
     const ageMonths = (Date.now() - new Date(known.createdAt).getTime()) / (86400000 * 30);
-    const protocolScore = PROTOCOL_SCORES[known.protocol] || 60;
-    if (protocolScore >= 75 && ageMonths > 3) {
+    const protocolScore = PROTOCOL_SCORES[known.protocol] || DEFAULT_PROTOCOL_SCORE;
+    if (protocolScore >= 26 && ageMonths > 3) {
+      // Morpheus+ tier protocols with some age → active
       status = "active";
-    } else if (protocolScore >= 60) {
+    } else if (protocolScore >= 23) {
+      // AI Arena+ tier → probabilistic
       status = seeded(h + 100) > 0.3 ? "active" : "inactive";
     } else {
       status = "under-review";
@@ -357,17 +466,11 @@ async function buildAgent(known: KnownAgent): Promise<Agent> {
   }
 
   // Stats: estimate from protocol data when on-chain data unavailable
-  const protocolBase = PROTOCOL_SCORES[known.protocol] || 60;
+  const protocolBase = PROTOCOL_SCORES[known.protocol] || DEFAULT_PROTOCOL_SCORE;
   const estimatedTxMultiplier = Math.round(50 + seeded(h + 200) * 450); // 50-500
   const estimatedTotalTx = totalTx > 0
     ? totalTx
-    : Math.round(estimatedTxMultiplier * (protocolBase / 70) * known.chains.length);
-
-  const successRate = transactions.length > 0
-    ? Math.round(
-        (transactions.filter((t) => t.status === "success").length / transactions.length) * 100
-      )
-    : clamp(Math.round(85 + seeded(h + 300) * 14), 85, 99);
+    : Math.round(estimatedTxMultiplier * (protocolBase / 25) * known.chains.length);
 
   const estimatedValue = balanceEth > 0
     ? balanceEth * 2500
