@@ -16,6 +16,7 @@ const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/agents", label: "Explore Agents" },
   { href: "/dashboard", label: "Dashboard" },
+  { href: "/methodology", label: "Methodology" },
 ];
 
 export function Header() {

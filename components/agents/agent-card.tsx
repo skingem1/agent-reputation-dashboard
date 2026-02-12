@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ReputationBadge } from "./reputation-badge";
 import { ChainBadge } from "./chain-badge";
 import { SkillBadge } from "./skill-badge";
+import { DataProvenanceBadges } from "./data-provenance";
 import { Activity, CheckCircle, Clock } from "lucide-react";
 import { cn, formatNumber } from "@/lib/utils";
 
@@ -75,19 +76,22 @@ export function AgentCard({ agent }: AgentCardProps) {
             )}
           </div>
 
-          <div className="mt-3 flex items-center gap-3 border-t pt-3 text-[11px] text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <Activity className="h-3 w-3" />
-              {formatNumber(agent.stats.totalTransactions)} txns
-            </span>
-            <span className="flex items-center gap-1">
-              <CheckCircle className="h-3 w-3" />
-              {agent.stats.successRate}%
-            </span>
-            <span className="flex items-center gap-1">
-              <Clock className="h-3 w-3" />
-              {agent.stats.avgResponseTime}
-            </span>
+          <div className="mt-3 flex items-center justify-between border-t pt-3 text-[11px] text-muted-foreground">
+            <div className="flex items-center gap-3">
+              <span className="flex items-center gap-1">
+                <Activity className="h-3 w-3" />
+                {formatNumber(agent.stats.totalTransactions)} txns
+              </span>
+              <span className="flex items-center gap-1">
+                <CheckCircle className="h-3 w-3" />
+                {agent.stats.successRate}%
+              </span>
+              <span className="flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                {agent.stats.avgResponseTime}
+              </span>
+            </div>
+            <DataProvenanceBadges provenance={agent.dataProvenance} compact />
           </div>
         </CardContent>
       </Card>

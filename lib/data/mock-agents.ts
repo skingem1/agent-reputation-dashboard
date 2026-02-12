@@ -222,6 +222,13 @@ function createAgent(index: number): Agent {
     walletAddress: generateWallet(seed + 22),
     website: seededRandom(seed + 23) > 0.5 ? `https://${name.toLowerCase().replace(/\s/g, "")}.xyz` : undefined,
     twitter: seededRandom(seed + 24) > 0.4 ? `@${name.replace(/\s/g, "")}` : undefined,
+    dataProvenance: {
+      onChain: true,
+      protocol: true,
+      performanceMetrics: true,
+      uptimeMonitoring: false,
+      sources: ["On-Chain", "Protocol Registry", "Performance Metrics"],
+    },
   };
 }
 

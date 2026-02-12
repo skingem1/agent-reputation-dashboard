@@ -11,6 +11,7 @@ import { ChainBadge } from "@/components/agents/chain-badge";
 import { SkillBadge } from "@/components/agents/skill-badge";
 import { TransactionList } from "@/components/agents/transaction-list";
 import { ReviewList } from "@/components/agents/review-list";
+import { DataProvenanceBadges } from "@/components/agents/data-provenance";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -144,6 +145,9 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
                     <Progress value={sub.value} className="mt-1 h-1.5" />
                   </div>
                 ))}
+              </div>
+              <div className="w-full border-t pt-3">
+                <DataProvenanceBadges provenance={agent.dataProvenance} />
               </div>
             </CardContent>
           </Card>

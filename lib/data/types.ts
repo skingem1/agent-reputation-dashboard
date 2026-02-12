@@ -44,6 +44,20 @@ export interface Chain {
   agentCount: number;
 }
 
+/** Data sources that contribute to an agent's reputation score */
+export interface DataProvenance {
+  /** On-chain data from wallet (tx counts, balances, transfers) */
+  onChain: boolean;
+  /** Protocol registry metadata (maturity, audits, ecosystem) */
+  protocol: boolean;
+  /** Simulated or real performance metrics */
+  performanceMetrics: boolean;
+  /** Real uptime monitoring data */
+  uptimeMonitoring: boolean;
+  /** Summary label for display */
+  sources: string[];
+}
+
 export interface Agent {
   id: string;
   name: string;
@@ -62,6 +76,8 @@ export interface Agent {
   website?: string;
   twitter?: string;
   source?: "hardcoded" | "user-submitted";
+  /** Which data sources contributed to this agent's score */
+  dataProvenance: DataProvenance;
 }
 
 export interface ReputationScore {
