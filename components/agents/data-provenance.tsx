@@ -26,7 +26,7 @@ const PROVENANCE_ITEMS = [
     label: "Protocol Registry",
     description: "Verified protocol metadata: maturity, audits, ecosystem size",
     icon: Database,
-    activeColor: "text-blue-500 bg-blue-500/10 border-blue-500/20",
+    activeColor: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
   },
   {
     key: "performanceMetrics" as const,

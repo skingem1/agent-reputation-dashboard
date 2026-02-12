@@ -79,7 +79,7 @@ export function SignInDialog({ open, onOpenChange }: SignInDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md bg-background border-cyan-500/10">
         <DialogHeader>
           <DialogTitle>Sign in to AgentRep</DialogTitle>
           <DialogDescription>
@@ -91,7 +91,7 @@ export function SignInDialog({ open, onOpenChange }: SignInDialogProps) {
           {/* OAuth Buttons */}
           <Button
             variant="outline"
-            className="w-full gap-2"
+            className="w-full gap-2 border-cyan-500/20 hover:border-cyan-500/40 hover:bg-cyan-500/5"
             onClick={() => handleOAuth("github")}
             disabled={loading !== null}
           >
@@ -105,7 +105,7 @@ export function SignInDialog({ open, onOpenChange }: SignInDialogProps) {
 
           <Button
             variant="outline"
-            className="w-full gap-2"
+            className="w-full gap-2 border-cyan-500/20 hover:border-cyan-500/40 hover:bg-cyan-500/5"
             onClick={() => handleOAuth("google")}
             disabled={loading !== null}
           >
@@ -147,8 +147,8 @@ export function SignInDialog({ open, onOpenChange }: SignInDialogProps) {
 
           {/* Email Magic Link */}
           {emailSent ? (
-            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-4 text-center">
-              <Mail className="mx-auto mb-2 h-8 w-8 text-emerald-500" />
+            <div className="rounded-lg border border-cyan-500/20 bg-cyan-500/10 p-4 text-center">
+              <Mail className="mx-auto mb-2 h-8 w-8 text-cyan-400" />
               <p className="text-sm font-medium">Check your inbox!</p>
               <p className="mt-1 text-xs text-muted-foreground">
                 We sent a magic link to <strong>{email}</strong>
@@ -166,11 +166,12 @@ export function SignInDialog({ open, onOpenChange }: SignInDialogProps) {
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={loading !== null}
                   required
+                  className="bg-background/50 border-cyan-500/20 focus-visible:border-cyan-500/50 focus-visible:ring-cyan-500/20"
                 />
               </div>
               <Button
                 type="submit"
-                className="w-full gap-2"
+                className="w-full gap-2 bg-gradient-to-r from-cyan-600 to-cyan-500 text-black font-semibold hover:from-cyan-500 hover:to-cyan-400 border-none glow-cyan"
                 disabled={loading !== null || !email.trim()}
               >
                 {loading === "email" ? (

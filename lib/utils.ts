@@ -7,16 +7,16 @@ export function cn(...inputs: ClassValue[]) {
 
 export function getReputationColor(score: number): string {
   if (score >= 80) return "text-emerald-500";
-  if (score >= 60) return "text-yellow-500";
-  if (score >= 40) return "text-orange-500";
-  return "text-red-500";
+  if (score >= 60) return "text-cyan-400";
+  if (score >= 40) return "text-violet-400";
+  return "text-pink-500";
 }
 
 export function getReputationBgColor(score: number): string {
   if (score >= 80) return "bg-emerald-500";
-  if (score >= 60) return "bg-yellow-500";
-  if (score >= 40) return "bg-orange-500";
-  return "bg-red-500";
+  if (score >= 60) return "bg-cyan-500";
+  if (score >= 40) return "bg-violet-500";
+  return "bg-pink-500";
 }
 
 export function getReputationLabel(score: number): string {

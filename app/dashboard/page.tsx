@@ -41,11 +41,11 @@ export default async function DashboardPage() {
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-8">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-            <BarChart3 className="h-5 w-5 text-primary" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-500/10">
+            <BarChart3 className="h-5 w-5 text-cyan-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold">Ecosystem Dashboard</h1>
+            <h1 className="text-2xl font-bold font-display">Ecosystem Dashboard</h1>
             <p className="text-sm text-muted-foreground">
               Real-time overview of the multi-chain AI agent ecosystem
             </p>
@@ -87,12 +87,12 @@ export default async function DashboardPage() {
 
       {/* Charts Row */}
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <Card>
+        <Card className="cyber-card">
           <CardContent className="p-6">
             <BarChart data={chainChartData} title="Agents by Chain" />
           </CardContent>
         </Card>
-        <Card>
+        <Card className="cyber-card">
           <CardContent className="p-6">
             <BarChart data={skillChartData} title="Agents by Skill" />
           </CardContent>
@@ -101,9 +101,9 @@ export default async function DashboardPage() {
 
       {/* Reputation Distribution & Daily Transactions */}
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <Card>
+        <Card className="cyber-card">
           <CardContent className="p-6">
-            <h3 className="text-sm font-semibold">Reputation Distribution</h3>
+            <h3 className="text-sm font-semibold font-display">Reputation Distribution</h3>
             <div className="mt-4 flex items-end gap-2">
               {stats.reputationDistribution.map((bucket) => {
                 const maxCount = Math.max(...stats.reputationDistribution.map((b) => b.count), 1);
@@ -112,12 +112,12 @@ export default async function DashboardPage() {
                   bucket.range === "81-100"
                     ? "#10b981"
                     : bucket.range === "61-80"
-                      ? "#eab308"
+                      ? "#06b6d4"
                       : bucket.range === "41-60"
-                        ? "#f97316"
+                        ? "#8b5cf6"
                         : bucket.range === "21-40"
-                          ? "#ef4444"
-                          : "#dc2626";
+                          ? "#ec4899"
+                          : "#ef4444";
                 return (
                   <div key={bucket.range} className="flex flex-1 flex-col items-center gap-1">
                     <span className="text-xs font-medium">{bucket.count}</span>
@@ -137,7 +137,7 @@ export default async function DashboardPage() {
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="cyber-card">
           <CardContent className="p-6">
             <AreaChart data={stats.dailyTransactions} title="Daily Transactions (30d)" />
           </CardContent>
@@ -145,9 +145,9 @@ export default async function DashboardPage() {
       </div>
 
       {/* Top Agents Leaderboard */}
-      <Card className="mt-6">
+      <Card className="mt-6 cyber-card">
         <CardHeader>
-          <CardTitle className="text-base">Top Agents Leaderboard</CardTitle>
+          <CardTitle className="text-base font-display">Top Agents Leaderboard</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
@@ -155,7 +155,7 @@ export default async function DashboardPage() {
               <Link
                 key={agent.id}
                 href={`/agents/${agent.id}`}
-                className="flex items-center gap-4 rounded-lg border p-3 transition-colors hover:bg-muted/50"
+                className="flex items-center gap-4 rounded-lg border border-cyan-500/10 p-3 transition-colors hover:bg-cyan-500/5"
               >
                 <span className="w-6 text-center text-sm font-bold text-muted-foreground">
                   {i + 1}

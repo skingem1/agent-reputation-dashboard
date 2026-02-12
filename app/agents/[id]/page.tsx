@@ -74,7 +74,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <Button asChild variant="ghost" size="sm" className="mb-6 gap-1">
+      <Button asChild variant="ghost" size="sm" className="mb-6 gap-1 text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10">
         <Link href="/agents">
           <ArrowLeft className="h-4 w-4" />
           Back to Agents
@@ -96,7 +96,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
             <span className={cn("absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-background", statusColor)} />
           </div>
           <div>
-            <h1 className="text-2xl font-bold">{agent.name}</h1>
+            <h1 className="text-2xl font-bold font-display">{agent.name}</h1>
             <p className="mt-1 text-sm text-muted-foreground">{agent.description}</p>
             <div className="mt-3 flex flex-wrap gap-1.5">
               {agent.chains.map((chain) => (
@@ -104,9 +104,9 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
               ))}
             </div>
             <div className="mt-2 flex items-center gap-3 text-xs text-muted-foreground">
-              <span className="font-mono">{agent.walletAddress}</span>
+              <span className="font-mono text-cyan-400/60">{agent.walletAddress}</span>
               {agent.website && (
-                <a href={agent.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-foreground">
+                <a href={agent.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-cyan-400">
                   <ExternalLink className="h-3 w-3" /> Website
                 </a>
               )}
@@ -123,7 +123,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Left column — Reputation */}
         <div className="space-y-6">
-          <Card>
+          <Card className="cyber-card">
             <CardHeader>
               <CardTitle className="text-base">Reputation Score</CardTitle>
             </CardHeader>
@@ -146,13 +146,13 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
                   </div>
                 ))}
               </div>
-              <div className="w-full border-t pt-3">
+              <div className="w-full border-t border-cyan-500/10 pt-3">
                 <DataProvenanceBadges provenance={agent.dataProvenance} />
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="cyber-card">
             <CardHeader>
               <CardTitle className="text-base">30-Day Trend</CardTitle>
             </CardHeader>
@@ -161,7 +161,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="cyber-card">
             <CardHeader>
               <CardTitle className="text-base">Skills</CardTitle>
             </CardHeader>
@@ -178,10 +178,10 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
           {/* Stats */}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {statItems.map((stat) => (
-              <Card key={stat.label}>
+              <Card key={stat.label} className="cyber-card">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2">
-                    <stat.icon className="h-4 w-4 text-muted-foreground" />
+                    <stat.icon className="h-4 w-4 text-cyan-400" />
                     <span className="text-xs text-muted-foreground">{stat.label}</span>
                   </div>
                   <p className="mt-1 text-xl font-bold">{stat.value}</p>
@@ -192,11 +192,11 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
 
           {/* Tabs */}
           <Tabs defaultValue="transactions">
-            <TabsList>
-              <TabsTrigger value="transactions">
+            <TabsList className="bg-muted/50 border border-cyan-500/10">
+              <TabsTrigger value="transactions" className="data-[state=active]:bg-cyan-500/10 data-[state=active]:text-cyan-400">
                 Transactions ({agent.transactions.length})
               </TabsTrigger>
-              <TabsTrigger value="reviews">
+              <TabsTrigger value="reviews" className="data-[state=active]:bg-cyan-500/10 data-[state=active]:text-cyan-400">
                 Reviews ({agent.reviews.length})
               </TabsTrigger>
             </TabsList>

@@ -59,16 +59,16 @@ export function RegisterSignInGate() {
   return (
     <div className="mx-auto max-w-md px-4 py-16 sm:px-6 lg:px-8">
       <div className="mb-8 text-center">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-purple-600">
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-violet-600 glow-cyan">
           <Bot className="h-7 w-7 text-white" />
         </div>
-        <h1 className="text-2xl font-bold">Register Your AI Agent</h1>
+        <h1 className="text-2xl font-bold font-display">Register Your AI Agent</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Sign in to submit your agent to the reputation dashboard.
         </p>
       </div>
 
-      <Card>
+      <Card className="cyber-card">
         <CardContent className="space-y-4 p-6">
           <div className="flex items-center gap-2 rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 text-sm text-amber-600 dark:text-amber-400">
             <Lock className="h-4 w-4 shrink-0" />
@@ -78,7 +78,7 @@ export function RegisterSignInGate() {
           {/* OAuth Buttons */}
           <Button
             variant="outline"
-            className="w-full gap-2"
+            className="w-full gap-2 border-cyan-500/20 hover:border-cyan-500/40 hover:bg-cyan-500/5"
             onClick={() => handleOAuth("github")}
             disabled={loading !== null}
           >
@@ -92,7 +92,7 @@ export function RegisterSignInGate() {
 
           <Button
             variant="outline"
-            className="w-full gap-2"
+            className="w-full gap-2 border-cyan-500/20 hover:border-cyan-500/40 hover:bg-cyan-500/5"
             onClick={() => handleOAuth("google")}
             disabled={loading !== null}
           >
@@ -134,8 +134,8 @@ export function RegisterSignInGate() {
 
           {/* Email Magic Link */}
           {emailSent ? (
-            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-4 text-center">
-              <Mail className="mx-auto mb-2 h-8 w-8 text-emerald-500" />
+            <div className="rounded-lg border border-cyan-500/20 bg-cyan-500/10 p-4 text-center">
+              <Mail className="mx-auto mb-2 h-8 w-8 text-cyan-400" />
               <p className="text-sm font-medium">Check your inbox!</p>
               <p className="mt-1 text-xs text-muted-foreground">
                 We sent a magic link to <strong>{email}</strong>
@@ -153,11 +153,12 @@ export function RegisterSignInGate() {
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={loading !== null}
                   required
+                  className="bg-background/50 border-cyan-500/20 focus-visible:border-cyan-500/50 focus-visible:ring-cyan-500/20"
                 />
               </div>
               <Button
                 type="submit"
-                className="w-full gap-2"
+                className="w-full gap-2 bg-gradient-to-r from-cyan-600 to-cyan-500 text-black font-semibold hover:from-cyan-500 hover:to-cyan-400 border-none glow-cyan"
                 disabled={loading !== null || !email.trim()}
               >
                 {loading === "email" ? (

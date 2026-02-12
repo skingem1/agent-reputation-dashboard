@@ -42,8 +42,8 @@ export default function MethodologyPage() {
       name: "Accuracy",
       weight: 25,
       icon: Target,
-      color: "text-blue-500",
-      bgColor: "bg-blue-500",
+      color: "text-cyan-400",
+      bgColor: "bg-cyan-500",
       inputs: [
         "Protocol base score",
         "Skill diversity bonus",
@@ -98,7 +98,7 @@ export default function MethodologyPage() {
     {
       icon: Database,
       name: "Protocol Registry",
-      color: "text-blue-500 bg-blue-500/10 border-blue-500/20",
+      color: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
       description:
         "Curated metadata from 9 verified AI agent protocols, weighted by maturity.",
       items: [
@@ -153,10 +153,10 @@ export default function MethodologyPage() {
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
       {/* Hero */}
       <div className="mb-12 text-center">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-purple-600">
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-violet-600 glow-cyan">
           <Layers className="h-7 w-7 text-white" />
         </div>
-        <h1 className="text-3xl font-bold sm:text-4xl">
+        <h1 className="text-3xl font-bold font-display sm:text-4xl">
           Scoring Methodology
         </h1>
         <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
@@ -167,10 +167,10 @@ export default function MethodologyPage() {
       </div>
 
       {/* How it works overview */}
-      <Card className="mb-8">
+      <Card className="mb-8 cyber-card">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-primary" />
+            <TrendingUp className="h-5 w-5 text-cyan-400" />
             How Scoring Works
           </CardTitle>
         </CardHeader>
@@ -181,10 +181,10 @@ export default function MethodologyPage() {
             draws on different data sources. These sub-scores are then combined
             into a weighted <strong className="text-foreground">overall score</strong> (20-99 range).
           </p>
-          <div className="flex items-center gap-2 rounded-lg border bg-muted/30 p-3 font-mono text-xs">
+          <div className="flex items-center gap-2 rounded-lg border border-cyan-500/10 bg-cyan-500/5 p-3 font-mono text-xs">
             <span className="text-emerald-500">Reliability</span>
             <span>&times;0.30 +</span>
-            <span className="text-blue-500">Accuracy</span>
+            <span className="text-cyan-400">Accuracy</span>
             <span>&times;0.25 +</span>
             <span className="text-amber-500">Speed</span>
             <span>&times;0.20 +</span>
@@ -201,10 +201,10 @@ export default function MethodologyPage() {
       </Card>
 
       {/* Sub-scores breakdown */}
-      <h2 className="mb-4 text-xl font-bold">Sub-Score Breakdown</h2>
+      <h2 className="mb-4 text-xl font-bold font-display">Sub-Score Breakdown</h2>
       <div className="mb-8 grid gap-4 sm:grid-cols-2">
         {subScores.map((sub) => (
-          <Card key={sub.name}>
+          <Card key={sub.name} className="cyber-card">
             <CardContent className="p-5">
               <div className="mb-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -233,10 +233,10 @@ export default function MethodologyPage() {
       </div>
 
       {/* Data Sources */}
-      <h2 className="mb-4 text-xl font-bold">Data Sources</h2>
+      <h2 className="mb-4 text-xl font-bold font-display">Data Sources</h2>
       <div className="mb-8 space-y-4">
         {dataSources.map((source) => (
-          <Card key={source.name}>
+          <Card key={source.name} className="cyber-card">
             <CardContent className="p-5">
               <div className="flex items-start gap-3">
                 <span
@@ -268,8 +268,8 @@ export default function MethodologyPage() {
       </div>
 
       {/* Protocol Base Scores */}
-      <h2 className="mb-4 text-xl font-bold">Protocol Base Scores</h2>
-      <Card className="mb-8">
+      <h2 className="mb-4 text-xl font-bold font-display">Protocol Base Scores</h2>
+      <Card className="mb-8 cyber-card">
         <CardContent className="p-5">
           <p className="mb-4 text-sm text-muted-foreground">
             Each protocol receives a base score (19-31) reflecting its maturity,
@@ -288,7 +288,7 @@ export default function MethodologyPage() {
                 <div className="flex-1">
                   <div className="h-2 overflow-hidden rounded-full bg-muted">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-blue-500 to-purple-500"
+                      className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-violet-500"
                       style={{ width: `${(p.score / 31) * 100}%` }}
                     />
                   </div>
@@ -306,8 +306,8 @@ export default function MethodologyPage() {
       </Card>
 
       {/* 30-Day Trends */}
-      <h2 className="mb-4 text-xl font-bold">Dynamic 30-Day Trends</h2>
-      <Card className="mb-8">
+      <h2 className="mb-4 text-xl font-bold font-display">Dynamic 30-Day Trends</h2>
+      <Card className="mb-8 cyber-card">
         <CardContent className="space-y-3 p-5 text-sm text-muted-foreground">
           <p>
             Unlike static scores, AgentRep generates a <strong className="text-foreground">reactive 30-day
@@ -323,7 +323,7 @@ export default function MethodologyPage() {
               </span>
             </li>
             <li className="flex items-start gap-2">
-              <Shield className="mt-0.5 h-4 w-4 shrink-0 text-blue-500" />
+              <Shield className="mt-0.5 h-4 w-4 shrink-0 text-cyan-400" />
               <span>
                 <strong className="text-foreground">Stability factor</strong> &mdash;
                 Agents with higher balances exhibit less daily noise, reflecting
@@ -348,8 +348,8 @@ export default function MethodologyPage() {
       </Card>
 
       {/* Walletless agents */}
-      <h2 className="mb-4 text-xl font-bold">Walletless Agent Scoring</h2>
-      <Card className="mb-8">
+      <h2 className="mb-4 text-xl font-bold font-display">Walletless Agent Scoring</h2>
+      <Card className="mb-8 cyber-card">
         <CardContent className="space-y-3 p-5 text-sm text-muted-foreground">
           <p>
             Not all AI agents operate on-chain. Agents registered without a
@@ -371,7 +371,7 @@ export default function MethodologyPage() {
       </Card>
 
       {/* Footer note */}
-      <div className="rounded-lg border border-dashed p-4 text-center text-xs text-muted-foreground">
+      <div className="rounded-lg border border-dashed border-cyan-500/20 p-4 text-center text-xs text-muted-foreground">
         <p>
           This methodology is continuously evolving. Uptime monitoring uses
           real HTTP health checks against agent endpoints. Other performance

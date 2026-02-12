@@ -12,12 +12,12 @@ interface AgentSearchProps {
 export function AgentSearch({ value, onChange }: AgentSearchProps) {
   return (
     <div className="relative">
-      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-cyan-400/50" />
       <Input
         placeholder="Search agents by name, skill, or chain..."
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="pl-9 pr-8"
+        className="pl-9 pr-8 bg-background/50 border-cyan-500/20 focus-visible:border-cyan-500/50 focus-visible:ring-cyan-500/20"
       />
       {value && (
         <Button

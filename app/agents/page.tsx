@@ -20,17 +20,17 @@ export default async function AgentsPage() {
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-8 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-            <Bot className="h-5 w-5 text-primary" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-500/10">
+            <Bot className="h-5 w-5 text-cyan-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold">Explore AI Agents</h1>
+            <h1 className="text-2xl font-bold font-display">Explore AI Agents</h1>
             <p className="text-sm text-muted-foreground">
               {agents.length} agents across multiple chains
             </p>
           </div>
         </div>
-        <Button asChild size="sm" className="gap-1.5">
+        <Button asChild size="sm" className="gap-1.5 bg-gradient-to-r from-cyan-600 to-cyan-500 text-black font-semibold hover:from-cyan-500 hover:to-cyan-400 border-none glow-cyan">
           <Link href="/agents/register">
             <Plus className="h-3.5 w-3.5" />
             Register Agent

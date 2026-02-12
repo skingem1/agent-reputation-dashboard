@@ -22,7 +22,7 @@ export function AgentCard({ agent }: AgentCardProps) {
 
   return (
     <Link href={`/agents/${agent.id}`}>
-      <Card className="group h-full transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20">
+      <Card className="group h-full cyber-card hover:-translate-y-1">
         <CardContent className="p-4">
           <div className="flex items-start gap-3">
             <div className="relative shrink-0">
@@ -43,11 +43,11 @@ export function AgentCard({ agent }: AgentCardProps) {
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1.5">
-                <h3 className="truncate text-sm font-semibold group-hover:text-primary transition-colors">
+                <h3 className="truncate text-sm font-semibold group-hover:text-cyan-400 transition-colors">
                   {agent.name}
                 </h3>
                 {agent.source === "user-submitted" && (
-                  <span className="shrink-0 rounded-full bg-purple-500/10 px-1.5 py-0.5 text-[9px] font-medium text-purple-500 border border-purple-500/20">
+                  <span className="shrink-0 rounded-full bg-pink-500/10 px-1.5 py-0.5 text-[9px] font-medium text-pink-400 border border-pink-500/20">
                     Community
                   </span>
                 )}
@@ -76,7 +76,7 @@ export function AgentCard({ agent }: AgentCardProps) {
             )}
           </div>
 
-          <div className="mt-3 flex items-center justify-between border-t pt-3 text-[11px] text-muted-foreground">
+          <div className="mt-3 flex items-center justify-between border-t border-cyan-500/10 pt-3 text-[11px] text-muted-foreground">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
                 <Activity className="h-3 w-3" />

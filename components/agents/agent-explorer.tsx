@@ -8,6 +8,7 @@ import { AgentSearch } from "./agent-search";
 import { AgentFiltersBar } from "./agent-filters";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -156,7 +157,12 @@ export function AgentExplorer({ agents }: AgentExplorerProps) {
                   key={pageNum}
                   variant={page === pageNum ? "default" : "outline"}
                   size="sm"
-                  className="h-8 w-8 p-0"
+                  className={cn(
+                    "h-8 w-8 p-0",
+                    page === pageNum
+                      ? "bg-cyan-500 text-black"
+                      : "border-cyan-500/20 hover:border-cyan-500/40"
+                  )}
                   onClick={() => setPage(pageNum)}
                 >
                   {pageNum}

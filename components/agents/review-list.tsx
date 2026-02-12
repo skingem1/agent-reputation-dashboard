@@ -14,7 +14,7 @@ export function ReviewList({ reviews }: ReviewListProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-3 rounded-lg border p-4">
+      <div className="flex items-center gap-3 rounded-lg border border-cyan-500/10 p-4">
         <div className="text-3xl font-bold">{avgRating.toFixed(1)}</div>
         <div>
           <div className="flex items-center gap-0.5">
@@ -37,7 +37,7 @@ export function ReviewList({ reviews }: ReviewListProps) {
 
       <div className="space-y-3">
         {reviews.map((review) => (
-          <div key={review.id} className="rounded-lg border p-4">
+          <div key={review.id} className="rounded-lg border border-cyan-500/10 p-4">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -50,7 +50,7 @@ export function ReviewList({ reviews }: ReviewListProps) {
                 />
                 <span className="text-sm font-medium">{review.author}</span>
                 {review.isVerified && (
-                  <BadgeCheck className="h-3.5 w-3.5 text-blue-500" />
+                  <BadgeCheck className="h-3.5 w-3.5 text-cyan-400" />
                 )}
               </div>
               <span className="text-xs text-muted-foreground">

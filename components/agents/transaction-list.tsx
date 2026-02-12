@@ -35,9 +35,9 @@ export function TransactionList({ transactions }: TransactionListProps) {
         return (
           <div
             key={tx.id}
-            className="flex items-center gap-3 rounded-lg border p-3 text-sm"
+            className="flex items-center gap-3 rounded-lg border border-cyan-500/10 p-3 text-sm"
           >
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-cyan-500/5">
               <Icon className="h-4 w-4 text-muted-foreground" />
             </div>
             <div className="min-w-0 flex-1">

@@ -94,7 +94,7 @@ export function AgentFiltersBar({ filters, onChange }: AgentFiltersProps) {
             onChange({ ...filters, sortBy: val as Filters["sortBy"] })
           }
         >
-          <SelectTrigger className="h-8 w-[140px] text-xs">
+          <SelectTrigger className="h-8 w-[140px] text-xs border-cyan-500/20 bg-background/50">
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
           <SelectContent>
@@ -111,7 +111,7 @@ export function AgentFiltersBar({ filters, onChange }: AgentFiltersProps) {
             onChange({ ...filters, sortOrder: val as "asc" | "desc" })
           }
         >
-          <SelectTrigger className="h-8 w-[100px] text-xs">
+          <SelectTrigger className="h-8 w-[100px] text-xs border-cyan-500/20 bg-background/50">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -129,7 +129,7 @@ export function AgentFiltersBar({ filters, onChange }: AgentFiltersProps) {
             })
           }
         >
-          <SelectTrigger className="h-8 w-[120px] text-xs">
+          <SelectTrigger className="h-8 w-[120px] text-xs border-cyan-500/20 bg-background/50">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -148,8 +148,8 @@ export function AgentFiltersBar({ filters, onChange }: AgentFiltersProps) {
               className={cn(
                 "rounded-full border px-2 py-0.5 text-[10px] font-medium transition-colors",
                 filters.skills.includes(skill)
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-border text-muted-foreground hover:text-foreground"
+                  ? "border-cyan-500 bg-cyan-500 text-black"
+                  : "border-cyan-500/20 text-muted-foreground hover:border-cyan-500/40 hover:text-cyan-400"
               )}
             >
               {skill}
@@ -162,7 +162,7 @@ export function AgentFiltersBar({ filters, onChange }: AgentFiltersProps) {
             variant="ghost"
             size="sm"
             onClick={resetFilters}
-            className="h-8 gap-1 text-xs text-muted-foreground"
+            className="h-8 gap-1 text-xs text-cyan-400"
           >
             <RotateCcw className="h-3 w-3" />
             Reset

@@ -18,8 +18,8 @@ export function ChainBadge({ chainId, size = "sm" }: ChainBadgeProps) {
         size === "sm" ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-1 text-xs"
       )}
       style={{
-        borderColor: `${chain.color}40`,
-        backgroundColor: `${chain.color}15`,
+        borderColor: `${chain.color}50`,
+        backgroundColor: `${chain.color}18`,
         color: chain.color,
       }}
     >

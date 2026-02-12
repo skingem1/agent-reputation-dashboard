@@ -10,7 +10,7 @@ export function BarChart({ data, title }: BarChartProps) {
 
   return (
     <div>
-      <h3 className="text-sm font-semibold">{title}</h3>
+      <h3 className="text-sm font-semibold font-display">{title}</h3>
       <div className="mt-4 space-y-2">
         {data.map((item) => (
           <div key={item.label} className="flex items-center gap-3">
@@ -18,7 +18,7 @@ export function BarChart({ data, title }: BarChartProps) {
               {item.label}
             </span>
             <div className="flex-1">
-              <div className="h-5 w-full rounded-full bg-muted">
+              <div className="h-5 w-full rounded-full bg-muted/50">
                 <div
                   className="h-5 rounded-full transition-all duration-500 flex items-center justify-end pr-2"
                   style={{

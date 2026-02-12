@@ -99,7 +99,7 @@ export function RegisterAgentForm({ protocols }: RegisterAgentFormProps) {
   };
 
   return (
-    <Card className="mt-6">
+    <Card className="mt-6 cyber-card">
       <CardContent className="p-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Agent Name */}
@@ -114,6 +114,7 @@ export function RegisterAgentForm({ protocols }: RegisterAgentFormProps) {
               onChange={(e) => setName(e.target.value)}
               maxLength={100}
               disabled={isPending}
+              className="bg-background/50 border-cyan-500/20 focus-visible:border-cyan-500/50 focus-visible:ring-cyan-500/20"
             />
             {slug && (
               <p className="text-xs text-muted-foreground">
@@ -135,6 +136,7 @@ export function RegisterAgentForm({ protocols }: RegisterAgentFormProps) {
               maxLength={500}
               rows={3}
               disabled={isPending}
+              className="bg-background/50 border-cyan-500/20 focus-visible:border-cyan-500/50 focus-visible:ring-cyan-500/20"
             />
             <p className="text-xs text-muted-foreground">
               {description.length}/500 characters
@@ -161,7 +163,7 @@ export function RegisterAgentForm({ protocols }: RegisterAgentFormProps) {
               </Label>
             </div>
             {!hasWallet && (
-              <div className="flex items-start gap-2 rounded-lg border border-blue-500/20 bg-blue-500/5 p-3 text-xs text-blue-600 dark:text-blue-400">
+              <div className="flex items-start gap-2 rounded-lg border border-cyan-500/20 bg-cyan-500/5 p-3 text-xs text-cyan-600 dark:text-cyan-400">
                 <Wallet className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                 <span>
                   Agents without a wallet will be scored based on protocol affiliation, skills, and simulated performance metrics.
@@ -180,7 +182,7 @@ export function RegisterAgentForm({ protocols }: RegisterAgentFormProps) {
                   value={walletAddress}
                   onChange={(e) => setWalletAddress(e.target.value)}
                   className={cn(
-                    "font-mono text-sm",
+                    "font-mono text-sm bg-background/50 border-cyan-500/20 focus-visible:border-cyan-500/50 focus-visible:ring-cyan-500/20",
                     walletAddress &&
                       !isValidWallet &&
                       "border-red-500 focus-visible:ring-red-500"
@@ -300,6 +302,7 @@ export function RegisterAgentForm({ protocols }: RegisterAgentFormProps) {
                 value={website}
                 onChange={(e) => setWebsite(e.target.value)}
                 disabled={isPending}
+                className="bg-background/50 border-cyan-500/20 focus-visible:border-cyan-500/50 focus-visible:ring-cyan-500/20"
               />
             </div>
             <div className="space-y-2">
@@ -310,6 +313,7 @@ export function RegisterAgentForm({ protocols }: RegisterAgentFormProps) {
                 value={twitter}
                 onChange={(e) => setTwitter(e.target.value)}
                 disabled={isPending}
+                className="bg-background/50 border-cyan-500/20 focus-visible:border-cyan-500/50 focus-visible:ring-cyan-500/20"
               />
             </div>
           </div>
@@ -326,7 +330,7 @@ export function RegisterAgentForm({ protocols }: RegisterAgentFormProps) {
           <Button
             type="submit"
             size="lg"
-            className="w-full gap-2"
+            className="w-full gap-2 bg-gradient-to-r from-cyan-600 to-cyan-500 text-black font-semibold hover:from-cyan-500 hover:to-cyan-400 border-none glow-cyan"
             disabled={!canSubmit || isPending}
           >
             {isPending ? (

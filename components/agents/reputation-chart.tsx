@@ -26,7 +26,7 @@ export function ReputationChart({ data }: ReputationChartProps) {
   ].join(" ");
 
   const trend = data[data.length - 1] - data[0];
-  const color = trend >= 0 ? "#10b981" : "#ef4444";
+  const color = trend >= 0 ? "#06b6d4" : "#ec4899";
 
   return (
     <div className="w-full">

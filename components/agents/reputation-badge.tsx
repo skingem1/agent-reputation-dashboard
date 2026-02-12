@@ -19,10 +19,10 @@ export function ReputationBadge({ score, trend, size = "sm" }: ReputationBadgePr
     score >= 80
       ? "#10b981"
       : score >= 60
-        ? "#eab308"
+        ? "#06b6d4"
         : score >= 40
-          ? "#f97316"
-          : "#ef4444";
+          ? "#8b5cf6"
+          : "#ec4899";
 
   const TrendIcon =
     trend === "up" ? TrendingUp : trend === "down" ? TrendingDown : Minus;
@@ -43,7 +43,7 @@ export function ReputationBadge({ score, trend, size = "sm" }: ReputationBadgePr
             fill="none"
             stroke="currentColor"
             strokeWidth={stroke}
-            className="text-muted/30"
+            className="text-cyan-500/10"
           />
           <circle
             cx={center}
