@@ -41,9 +41,16 @@ export function AgentCard({ agent }: AgentCardProps) {
               />
             </div>
             <div className="min-w-0 flex-1">
-              <h3 className="truncate text-sm font-semibold group-hover:text-primary transition-colors">
-                {agent.name}
-              </h3>
+              <div className="flex items-center gap-1.5">
+                <h3 className="truncate text-sm font-semibold group-hover:text-primary transition-colors">
+                  {agent.name}
+                </h3>
+                {agent.source === "user-submitted" && (
+                  <span className="shrink-0 rounded-full bg-purple-500/10 px-1.5 py-0.5 text-[9px] font-medium text-purple-500 border border-purple-500/20">
+                    Community
+                  </span>
+                )}
+              </div>
               <p className="mt-0.5 truncate text-xs text-muted-foreground">
                 {agent.description}
               </p>

@@ -17,6 +17,7 @@ import {
   TrendingUp,
   Users,
   Zap,
+  Plus,
 } from "lucide-react";
 
 export default async function HomePage() {
@@ -40,7 +41,7 @@ export default async function HomePage() {
               Ethereum, Solana, Base, and more. Track performance, verify
               trustworthiness, and make informed decisions.
             </p>
-            <div className="mt-8 flex items-center justify-center gap-4">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Button asChild size="lg" className="gap-2">
                 <Link href="/agents">
                   <Search className="h-4 w-4" />
@@ -51,6 +52,12 @@ export default async function HomePage() {
                 <Link href="/dashboard">
                   <TrendingUp className="h-4 w-4" />
                   View Dashboard
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="gap-2">
+                <Link href="/agents/register">
+                  <Plus className="h-4 w-4" />
+                  Register Your Agent
                 </Link>
               </Button>
             </div>

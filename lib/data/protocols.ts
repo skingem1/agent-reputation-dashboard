@@ -39,6 +39,8 @@ export interface KnownAgent {
   twitter?: string;
   /** When the agent was first seen (approximate) */
   createdAt: string;
+  /** Data source: hardcoded registry or user-submitted */
+  source?: "hardcoded" | "user-submitted";
 }
 
 // ===== PROTOCOL DEFINITIONS =====

@@ -61,6 +61,7 @@ export interface Agent {
   walletAddress: string;
   website?: string;
   twitter?: string;
+  source?: "hardcoded" | "user-submitted";
 }
 
 export interface ReputationScore {

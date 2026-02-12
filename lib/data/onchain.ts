@@ -21,6 +21,7 @@ import {
   TransactionType,
 } from "./types";
 import { KNOWN_AGENTS, KnownAgent, PROTOCOL_MAP } from "./protocols";
+import { getSubmittedAgents } from "./supabase-agents";
 import {
   ANKR_CHAIN_NAMES,
   ankrAdvancedCall,
@@ -215,9 +216,12 @@ function computeReputation(
   const hasOnChainData = totalTx > 0 || balanceEth > 0;
 
   // --- BASELINE from protocol metadata (always available) ---
+  const isUserSubmitted = agent.source === "user-submitted";
 
-  // Protocol maturity (0-100)
-  const protocolBase = PROTOCOL_SCORES[agent.protocol] || 60;
+  // Protocol maturity (0-100): user-submitted agents start lower, relying more on on-chain data
+  const protocolBase = isUserSubmitted
+    ? 55
+    : (PROTOCOL_SCORES[agent.protocol] || 60);
 
   // Agent age bonus (0-20): older = more established
   const agentAgeMonths =
@@ -270,12 +274,14 @@ function computeReputation(
   );
 
   // Overall: weighted average of sub-scores + on-chain bonus
+  // User-submitted agents get heavier on-chain weighting (on-chain data matters more for unverified agents)
+  const onChainWeight = isUserSubmitted ? 0.5 : 0.3;
   const rawOverall = Math.round(
     reliability * 0.3 +
     accuracy * 0.2 +
     speed * 0.2 +
     trust * 0.3
-  ) + Math.round(onChainBonus * 0.3) + variation;
+  ) + Math.round(onChainBonus * onChainWeight) + variation;
 
   const overall = clamp(rawOverall, 20, 99);
 
@@ -411,6 +417,7 @@ async function buildAgent(known: KnownAgent): Promise<Agent> {
     walletAddress: truncateAddress(known.walletAddress),
     website: known.website,
     twitter: known.twitter,
+    source: known.source || "hardcoded",
   };
 }
 
@@ -531,16 +538,31 @@ function generateProtocolReviews(agent: KnownAgent, score: number): Review[] {
 
 // ===== PUBLIC API (replaces mock-agents.ts exports) =====
 
+// Invalidate the in-memory cache (call after new agent submission)
+export function invalidateAgentsCache() {
+  agentsCache = null;
+  cacheTimestamp = 0;
+}
+
 export async function getAllAgents(): Promise<Agent[]> {
   if (agentsCache && Date.now() - cacheTimestamp < CACHE_TTL) {
     return agentsCache;
   }
 
+  // Fetch user-submitted agents from Supabase (gracefully fallback to empty)
+  const submittedAgents = await getSubmittedAgents().catch(() => [] as KnownAgent[]);
+
+  // Merge hardcoded + user-submitted agents
+  const allKnownAgents: KnownAgent[] = [
+    ...KNOWN_AGENTS.map((a) => ({ ...a, source: "hardcoded" as const })),
+    ...submittedAgents,
+  ];
+
   const batchSize = 5;
   const agents: Agent[] = [];
 
-  for (let i = 0; i < KNOWN_AGENTS.length; i += batchSize) {
-    const batch = KNOWN_AGENTS.slice(i, i + batchSize);
+  for (let i = 0; i < allKnownAgents.length; i += batchSize) {
+    const batch = allKnownAgents.slice(i, i + batchSize);
     const results = await Promise.allSettled(batch.map(buildAgent));
     for (const r of results) {
       if (r.status === "fulfilled") {
@@ -561,7 +583,22 @@ export async function getAgentById(id: string): Promise<Agent | undefined> {
     return agentsCache.find((a) => a.id === id);
   }
 
-  const known = KNOWN_AGENTS.find((a) => a.id === id);
+  // Check hardcoded agents first
+  let known: KnownAgent | undefined = KNOWN_AGENTS.find((a) => a.id === id);
+  if (known) {
+    known = { ...known, source: "hardcoded" as const };
+  }
+
+  // If not found, check user-submitted agents in Supabase
+  if (!known) {
+    try {
+      const submitted = await getSubmittedAgents();
+      known = submitted.find((a) => a.id === id);
+    } catch {
+      // Supabase unavailable — continue
+    }
+  }
+
   if (!known) return undefined;
 
   try {
