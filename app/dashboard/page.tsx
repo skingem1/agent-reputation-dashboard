@@ -1,5 +1,8 @@
+// Revalidate every 5 minutes (ISR for real on-chain data)
+export const revalidate = 300;
+
 import Link from "next/link";
-import { getEcosystemStats, getTopAgents } from "@/lib/data/mock-agents";
+import { getEcosystemStats, getTopAgents } from "@/lib/data/onchain";
 import { CHAINS, CHAIN_MAP } from "@/lib/data/chains";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { BarChart } from "@/components/dashboard/bar-chart";
@@ -15,9 +18,9 @@ export const metadata = {
   description: "Ecosystem analytics for the multi-chain AI agent reputation platform",
 };
 
-export default function DashboardPage() {
-  const stats = getEcosystemStats();
-  const topAgents = getTopAgents(10);
+export default async function DashboardPage() {
+  const stats = await getEcosystemStats();
+  const topAgents = await getTopAgents(10);
 
   const chainChartData = CHAINS.map((chain) => ({
     label: chain.name,

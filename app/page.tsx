@@ -1,8 +1,11 @@
+// Revalidate every 5 minutes (ISR for real on-chain data)
+export const revalidate = 300;
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { AgentCard } from "@/components/agents/agent-card";
-import { getTopAgents, getEcosystemStats } from "@/lib/data/mock-agents";
+import { getTopAgents, getEcosystemStats } from "@/lib/data/onchain";
 import { CHAINS } from "@/lib/data/chains";
 import { formatNumber } from "@/lib/utils";
 import {
@@ -16,9 +19,9 @@ import {
   Zap,
 } from "lucide-react";
 
-export default function HomePage() {
-  const topAgents = getTopAgents(6);
-  const stats = getEcosystemStats();
+export default async function HomePage() {
+  const topAgents = await getTopAgents(6);
+  const stats = await getEcosystemStats();
 
   return (
     <div>

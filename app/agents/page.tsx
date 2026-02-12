@@ -1,5 +1,8 @@
+// Revalidate every 5 minutes (ISR for real on-chain data)
+export const revalidate = 300;
+
 import { Suspense } from "react";
-import { getAllAgents } from "@/lib/data/mock-agents";
+import { getAllAgents } from "@/lib/data/onchain";
 import { AgentExplorer } from "@/components/agents/agent-explorer";
 import { Bot } from "lucide-react";
 
@@ -8,8 +11,8 @@ export const metadata = {
   description: "Discover and evaluate AI agents across multiple blockchains",
 };
 
-export default function AgentsPage() {
-  const agents = getAllAgents();
+export default async function AgentsPage() {
+  const agents = await getAllAgents();
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">

@@ -1,6 +1,10 @@
+// Revalidate every 5 minutes (ISR for real on-chain data)
+export const revalidate = 300;
+export const dynamicParams = true;
+
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getAgentById, getAllAgents } from "@/lib/data/mock-agents";
+import { getAgentById, getAllAgents } from "@/lib/data/onchain";
 import { ReputationBadge } from "@/components/agents/reputation-badge";
 import { ReputationChart } from "@/components/agents/reputation-chart";
 import { ChainBadge } from "@/components/agents/chain-badge";
@@ -25,12 +29,13 @@ import {
 } from "lucide-react";
 
 export async function generateStaticParams() {
-  return getAllAgents().map((agent) => ({ id: agent.id }));
+  const agents = await getAllAgents();
+  return agents.map((agent) => ({ id: agent.id }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const agent = getAgentById(id);
+  const agent = await getAgentById(id);
   if (!agent) return { title: "Agent Not Found | AgentRep" };
   return {
     title: `${agent.name} | AgentRep`,
@@ -40,7 +45,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function AgentProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const agent = getAgentById(id);
+  const agent = await getAgentById(id);
   if (!agent) notFound();
 
   const statusColor =
