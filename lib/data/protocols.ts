@@ -157,6 +157,35 @@ export const PROTOCOLS: ProtocolInfo[] = [
     },
     registryContracts: {},
   },
+  {
+    id: "erc-8004",
+    name: "ERC-8004 (Trustless Agents)",
+    description:
+      "Ethereum standard for on-chain AI agent identity, reputation, and validation. Singleton registries deployed via CREATE2 on Ethereum and Base. Co-authored by MetaMask, Ethereum Foundation, Google, and Coinbase.",
+    website: "https://eips.ethereum.org/EIPS/eip-8004",
+    twitter: "@eikipattern",
+    chains: ["ethereum", "base"],
+    tokenSymbol: "—",
+    tokenContracts: {},
+    registryContracts: {
+      ethereum: "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432", // IdentityRegistry
+      base: "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432", // Same address via CREATE2
+    },
+  },
+  {
+    id: "openclaw",
+    name: "OpenClaw / Moltbook",
+    description:
+      "Open-source AI agent framework with 1.5M+ agents on Moltbook. Agents operate on Base via Privy MPC wallets, with on-chain payments via the x402 protocol and Agent Escrow.",
+    website: "https://www.moltbook.com",
+    twitter: "@OpenClawAI",
+    chains: ["base", "ethereum"],
+    tokenSymbol: "—",
+    tokenContracts: {},
+    registryContracts: {
+      base: "0x6AC844Ef070ee564ee40b81134b7707A3A4eb7eb", // Agent Escrow Protocol
+    },
+  },
 ];
 
 export const PROTOCOL_MAP: Record<string, ProtocolInfo> = Object.fromEntries(
@@ -491,6 +520,103 @@ export const KNOWN_AGENTS: KnownAgent[] = [
     skills: ["DeFi", "Security", "Oracle"],
     website: "https://wayfinder.ai",
     createdAt: "2024-09-01T00:00:00Z",
+  },
+
+  // --- ERC-8004 Trustless Agents (Ethereum + Base) ---
+  {
+    id: "erc8004-identity-registry",
+    name: "ERC-8004 Identity Registry",
+    description:
+      "The singleton IdentityRegistry contract for ERC-8004 Trustless Agents. Manages on-chain agent IDs as ERC-721 NFTs with metadata, wallet bindings, and AgentCard URIs. Over 10K agents registered since mainnet launch Jan 29, 2026.",
+    protocol: "erc-8004",
+    walletAddress: "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+    chains: ["ethereum", "base"],
+    skills: ["Security", "Oracle", "Research"],
+    website: "https://eips.ethereum.org/EIPS/eip-8004",
+    createdAt: "2026-01-29T00:00:00Z",
+  },
+  {
+    id: "erc8004-reputation-registry",
+    name: "ERC-8004 Reputation Registry",
+    description:
+      "On-chain reputation feedback system for ERC-8004 agents. Stores agent-to-agent attestations with tags, scores, and verifiable feedback URIs. Lightweight interface — actual reputation scoring happens off-chain.",
+    protocol: "erc-8004",
+    walletAddress: "0x8004BAa17C55a88189AE136b182e5fdA19dE9b63",
+    chains: ["ethereum", "base"],
+    skills: ["Analytics", "Security", "Oracle"],
+    website: "https://eips.ethereum.org/EIPS/eip-8004",
+    createdAt: "2026-01-29T00:00:00Z",
+  },
+
+  // --- OpenClaw / Moltbook Agents (Base) ---
+  {
+    id: "openclaw-clawdbotatg",
+    name: "clawdbotatg.eth — OpenClaw Pioneer",
+    description:
+      "The original OpenClaw on-chain agent built by Austin Griffith. Features tipping, crowdfunding, charity, and token burning contracts on Base. One of the most active agent wallets in the ecosystem.",
+    protocol: "openclaw",
+    walletAddress: "0x11ce532845cE0eAcdA41f72FDc1C88c335981442",
+    chains: ["base"],
+    skills: ["DeFi", "Social", "Trading"],
+    website: "https://github.com/clawdbotatg",
+    twitter: "@clawdbotatg",
+    createdAt: "2026-01-25T00:00:00Z",
+  },
+  {
+    id: "openclaw-escrow-protocol",
+    name: "Agent Escrow Protocol",
+    description:
+      "Smart contract for trustless agent-to-agent USDC payments on Base. Handles escrow, release, and dispute resolution for OpenClaw agent commerce.",
+    protocol: "openclaw",
+    walletAddress: "0x6AC844Ef070ee564ee40b81134b7707A3A4eb7eb",
+    chains: ["base"],
+    skills: ["DeFi", "Security", "Trading"],
+    website: "https://www.moltbook.com",
+    createdAt: "2026-01-30T00:00:00Z",
+  },
+  {
+    id: "openclaw-clawd-token",
+    name: "Clawd Token Agent",
+    description:
+      "The $CLAWD token contract on Base — an experimental agent-economy token powering tips, bounties, and crowdfunding within the OpenClaw ecosystem.",
+    protocol: "openclaw",
+    walletAddress: "0x9f86dB9fc6f7c9408e8Fda3Ff8ce4e78ac7a6b07",
+    chains: ["base"],
+    skills: ["DeFi", "Social", "NFT"],
+    createdAt: "2026-01-28T00:00:00Z",
+  },
+  {
+    id: "openclaw-tip-contract",
+    name: "OpenClaw Tip Agent",
+    description:
+      "On-chain tipping contract enabling OpenClaw agents to send micro-payments to other agents on Base. Part of the clawdbotatg suite of agent-economy primitives.",
+    protocol: "openclaw",
+    walletAddress: "0x25BF19565b301ab262407DfBfA307ed2cA3306f0",
+    chains: ["base"],
+    skills: ["DeFi", "Social", "Content"],
+    createdAt: "2026-01-27T00:00:00Z",
+  },
+  {
+    id: "openclaw-crowdfund",
+    name: "OpenClaw Crowdfund Agent",
+    description:
+      "Decentralized crowdfunding contract for OpenClaw agents on Base. Allows agents to pool USDC for collaborative projects and bounties.",
+    protocol: "openclaw",
+    walletAddress: "0x75d19359207De12d27B01eE429743d4145D2cdC6",
+    chains: ["base"],
+    skills: ["DeFi", "Governance", "Social"],
+    createdAt: "2026-01-27T00:00:00Z",
+  },
+  {
+    id: "openclaw-burner",
+    name: "Clawd Burner Agent",
+    description:
+      "Deflationary token burning agent for $CLAWD on Base. Automatically burns tokens to reduce supply based on configurable triggers.",
+    protocol: "openclaw",
+    walletAddress: "0xe499B193ffD38626D79e526356F3445ce0A943B9",
+    chains: ["base"],
+    skills: ["DeFi", "Analytics", "Trading"],
+    createdAt: "2026-01-29T00:00:00Z",
   },
 ];
 

@@ -113,11 +113,22 @@ export function encodeFunctionCall(selector: string, ...args: string[]): string 
 
 // Common function selectors (first 4 bytes of keccak256 of function signature)
 export const SELECTORS = {
-  // ERC-721
+  // ERC-721 / ERC-721 Enumerable
   totalSupply: "0x18160ddd",
   ownerOf: "0x6352211e",       // ownerOf(uint256)
   tokenURI: "0xc87b56dd",     // tokenURI(uint256)
+  tokenByIndex: "0x4f6ccce7", // tokenByIndex(uint256)
+  balanceOf: "0x70a08231",    // balanceOf(address)
   // Autonolas ServiceRegistry
   getService: "0x29e94130",    // getService(uint256)
   getAgentInstances: "0x1f51c821", // getAgentInstances(uint256)
+  // ERC-8004 IdentityRegistry (extends ERC-721)
+  getAgentWallet: "0xa4d0caf2", // getAgentWallet(uint256)
+  getMetadata: "0x4d7b1590",   // getMetadata(uint256,string)
+} as const;
+
+// ERC-8004 contract addresses (same on ETH + Base via CREATE2)
+export const ERC_8004 = {
+  identityRegistry: "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+  reputationRegistry: "0x8004BAa17C55a88189AE136b182e5fdA19dE9b63",
 } as const;
