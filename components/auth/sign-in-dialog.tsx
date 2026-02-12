@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Mail, Github, Loader2 } from "lucide-react";
+import { Mail, Loader2 } from "lucide-react";
 
 interface SignInDialogProps {
   open: boolean;
@@ -89,20 +89,6 @@ export function SignInDialog({ open, onOpenChange }: SignInDialogProps) {
 
         <div className="space-y-4 pt-2">
           {/* OAuth Buttons */}
-          <Button
-            variant="outline"
-            className="w-full gap-2"
-            onClick={() => handleOAuth("github")}
-            disabled={loading !== null}
-          >
-            {loading === "github" ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Github className="h-4 w-4" />
-            )}
-            Continue with GitHub
-          </Button>
-
           <Button
             variant="outline"
             className="w-full gap-2"

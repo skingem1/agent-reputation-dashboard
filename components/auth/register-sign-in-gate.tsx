@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
-import { Mail, Github, Loader2, Bot, Lock } from "lucide-react";
+import { Mail, Loader2, Bot, Lock } from "lucide-react";
 
 export function RegisterSignInGate() {
   const [email, setEmail] = useState("");
@@ -76,20 +76,6 @@ export function RegisterSignInGate() {
           </div>
 
           {/* OAuth Buttons */}
-          <Button
-            variant="outline"
-            className="w-full gap-2"
-            onClick={() => handleOAuth("github")}
-            disabled={loading !== null}
-          >
-            {loading === "github" ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Github className="h-4 w-4" />
-            )}
-            Continue with GitHub
-          </Button>
-
           <Button
             variant="outline"
             className="w-full gap-2"

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { Menu, Moon, Sun, Zap, Plus } from "lucide-react";
+import { Menu, Moon, Sun, Zap, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
@@ -64,11 +64,12 @@ export function Header() {
                 ) : (
                   <Button
                     size="sm"
+                    variant="outline"
                     className="hidden gap-1.5 sm:inline-flex"
                     onClick={() => setShowSignIn(true)}
                   >
-                    <Plus className="h-3.5 w-3.5" />
-                    Register Agent
+                    <LogIn className="h-3.5 w-3.5" />
+                    Login
                   </Button>
                 )}
               </>
@@ -110,18 +111,19 @@ export function Header() {
                     </Link>
                   ))}
 
-                  {/* Mobile: Register / Sign out */}
+                  {/* Mobile: Login / Sign out */}
                   {!loading && !user && (
                     <Button
                       size="sm"
+                      variant="outline"
                       className="mt-2 gap-1.5"
                       onClick={() => {
                         setOpen(false);
                         setShowSignIn(true);
                       }}
                     >
-                      <Plus className="h-3.5 w-3.5" />
-                      Register Agent
+                      <LogIn className="h-3.5 w-3.5" />
+                      Login
                     </Button>
                   )}
                   {!loading && user && (
